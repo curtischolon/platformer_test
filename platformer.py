@@ -22,6 +22,7 @@ class MyGame(arcade.Window):
         self.wall_list = None
         self.player_list = None
 
+        self.background = None
         # player
         self.player_sprite = None
 
@@ -29,6 +30,8 @@ class MyGame(arcade.Window):
 
     def setup(self):
         """setup happens here"""
+        self.background = arcade.load_texture("./assets/tiles/png/BG.png")
+
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
 
@@ -52,7 +55,7 @@ class MyGame(arcade.Window):
         image_source = "./assets/characters/main_character/idle (1).png"
         self.player_sprite = arcade.Sprite(image_source, CHARACTER_SCALING)
         self.player_sprite.center_x = 128
-        self.player_sprite.bottom = self.ground
+        self.player_sprite.bottom = floor
 
         self.player_list.append(self.player_sprite)
 
@@ -63,6 +66,9 @@ class MyGame(arcade.Window):
 
         arcade.start_render()
         # code to draw the screen goes here
+
+        scale = SCREEN_WIDTH / self.background.width
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
         self.wall_list.draw()
         self.player_list.draw()
