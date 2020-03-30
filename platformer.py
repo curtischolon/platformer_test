@@ -13,6 +13,12 @@ PLAYER_MOVEMENT_SPEED = 5
 GRAVITY = 3
 PLAYER_JUMP_SPEED = 40
 
+# Scrolling
+LEFT_VIEWPORT_MARGIN = 250
+RIGHT_VIEWPORT_MARGIN = 250
+BOTTOM_VIEWPORT_MARGIN = 50
+TOP_VIEWPORT_MARGIN = 100
+
 
 class MyGame(arcade.Window):
     def __init__(self):
@@ -28,6 +34,10 @@ class MyGame(arcade.Window):
         self.player_sprite = None
 
         self.physics_engine = None
+
+        # used to keep track of our scrolling
+        self.view_bottom = 0
+        self.view_left = 0
 
     def setup(self):
         """setup happens here"""
@@ -94,6 +104,40 @@ class MyGame(arcade.Window):
     def on_update(self, delta_time):
 
         self.physics_engine.update()
+
+        # track if we need to change the viewport
+        changed = False
+
+        # scroll left
+        left_boundary = self.view_left + LEFT_VIEWPORT_MARGIN
+        if self.player_sprite.left < left_boundary:
+            self.view_left -= left_boundary - self.player_sprite.left
+            changed = True
+
+        # scroll right
+        right_boundary = self.view_left + SCREEN_WIDTH - RIGHT_VIEWPORT_MARGIN
+        if self.player_sprite.right > right_boundary:
+            self.view_left += self.player_sprite.right - right_boundary
+            changed = True
+
+        # scroll up
+        top_boundary = self.view_bottom + SCREEN_HEIGHT - TOP_VIEWPORT_MARGIN
+        if self.player_sprite.top > top_boundary:
+            self.view_bottom += self.player_sprite.top - top_boundary
+            changed = True
+
+        # scroll down
+        bottom_boundary = self.view_bottom + BOTTOM_VIEWPORT_MARGIN
+        if self.player_sprite.bottom < bottom_boundary:
+            self.view_bottom -= bottom_boundary - self.player_sprite.bottom
+            changed = True
+
+        if changed:
+            self.view_bottom = int(self.view_bottom)
+            self.view_left = int(self.view_left)
+
+            arcade.set_viewport(self.view_left, SCREEN_WIDTH + self.view_left,
+                                self.view_bottom, SCREEN_HEIGHT + self.view_bottom)
 
 
 def main():
