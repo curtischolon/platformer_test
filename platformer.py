@@ -46,29 +46,35 @@ class MyGame(arcade.Window):
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
 
-        # sets the floor
-        for x in range(0, 1250, 64):
-            wall = arcade.Sprite("./assets/tiles/png/tile/2.png", TILE_SCALING)
-            wall.center_x = x
-            wall.center_y = 32
-            self.wall_list.append(wall)
-        self.floor = wall.height
-
-        coordinate_list = [[512, self.floor],
-                           [256, self.floor],
-                           [768, self.floor]]
-
-        for coordinate in coordinate_list:
-            wall = arcade.Sprite("./assets/tiles/png/objects/crate.png", TILE_SCALING)
-            wall.center_x, wall.bottom = coordinate
-            self.wall_list.append(wall)
+        # # sets the floor
+        # for x in range(0, 1250, 64):
+        #     wall = arcade.Sprite("./assets/tiles/png/tile/2.png", TILE_SCALING)
+        #     wall.center_x = x
+        #     wall.center_y = 32
+        #     self.wall_list.append(wall)
+        # self.floor = wall.height
+        #
+        # coordinate_list = [[512, self.floor],
+        #                    [256, self.floor],
+        #                    [768, self.floor]]
+        #
+        # for coordinate in coordinate_list:
+        #     wall = arcade.Sprite("./assets/tiles/png/objects/crate.png", TILE_SCALING)
+        #     wall.center_x, wall.bottom = coordinate
+        #     self.wall_list.append(wall)
 
         image_source = "./assets/characters/main_character/idle (1).png"
         self.player_sprite = arcade.Sprite(image_source, CHARACTER_SCALING)
         self.player_sprite.center_x = 128
-        self.player_sprite.bottom = self.floor
+        # self.player_sprite.bottom = self.floor
+        self.player_sprite.center_y = 32
 
         self.player_list.append(self.player_sprite)
+
+        map_name = "./assets/maps/map.tmx"
+        platforms_layer_name = 'Platforms'
+        my_map = arcade.tilemap.read_tmx(map_name)
+        self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
