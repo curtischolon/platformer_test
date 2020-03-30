@@ -21,6 +21,7 @@ class MyGame(arcade.Window):
 
         self.wall_list = None
         self.player_list = None
+        self.floor = None
 
         self.background = None
         # player
@@ -41,11 +42,11 @@ class MyGame(arcade.Window):
             wall.center_x = x
             wall.center_y = 32
             self.wall_list.append(wall)
-        floor = wall.height
+        self.floor = wall.height
 
-        coordinate_list = [[512, floor],
-                           [256, floor],
-                           [768, floor]]
+        coordinate_list = [[512, self.floor],
+                           [256, self.floor],
+                           [768, self.floor]]
 
         for coordinate in coordinate_list:
             wall = arcade.Sprite("./assets/tiles/png/objects/crate.png", TILE_SCALING)
@@ -55,7 +56,7 @@ class MyGame(arcade.Window):
         image_source = "./assets/characters/main_character/idle (1).png"
         self.player_sprite = arcade.Sprite(image_source, CHARACTER_SCALING)
         self.player_sprite.center_x = 128
-        self.player_sprite.bottom = floor
+        self.player_sprite.bottom = self.floor
 
         self.player_list.append(self.player_sprite)
 
