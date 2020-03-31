@@ -46,22 +46,22 @@ class MyGame(arcade.Window):
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
 
-        # # sets the floor
-        # for x in range(0, 1250, 64):
-        #     wall = arcade.Sprite("./assets/tiles/png/tile/2.png", TILE_SCALING)
-        #     wall.center_x = x
-        #     wall.center_y = 32
-        #     self.wall_list.append(wall)
-        # self.floor = wall.height
-        #
-        # coordinate_list = [[512, self.floor],
-        #                    [256, self.floor],
-        #                    [768, self.floor]]
-        #
-        # for coordinate in coordinate_list:
-        #     wall = arcade.Sprite("./assets/tiles/png/objects/crate.png", TILE_SCALING)
-        #     wall.center_x, wall.bottom = coordinate
-        #     self.wall_list.append(wall)
+        # sets the floor
+        for x in range(0, 1250, 64):
+            wall = arcade.Sprite("./assets/tiles/png/tile/2.png", TILE_SCALING)
+            wall.center_x = x
+            wall.center_y = 32
+            self.wall_list.append(wall)
+        self.floor = wall.height
+
+        coordinate_list = [[512, self.floor],
+                           [256, self.floor],
+                           [768, self.floor]]
+
+        for coordinate in coordinate_list:
+            wall = arcade.Sprite("./assets/tiles/png/objects/crate.png", TILE_SCALING)
+            wall.center_x, wall.bottom = coordinate
+            self.wall_list.append(wall)
 
         image_source = "./assets/characters/main_character/idle (1).png"
         self.player_sprite = arcade.Sprite(image_source, CHARACTER_SCALING)
@@ -71,10 +71,10 @@ class MyGame(arcade.Window):
 
         self.player_list.append(self.player_sprite)
 
-        map_name = "./assets/maps/map.tmx"
-        platforms_layer_name = 'Platforms'
-        my_map = arcade.tilemap.read_tmx(map_name)
-        self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
+        # map_name = "./assets/maps/map.tmx"
+        # platforms_layer_name = 'Platforms'
+        # my_map = arcade.tilemap.read_tmx(map_name)
+        # self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
@@ -85,7 +85,7 @@ class MyGame(arcade.Window):
         # code to draw the screen goes here
 
         scale = SCREEN_WIDTH / self.background.width
-        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+        arcade.draw_lrwh_rectangle_textured(-300, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
         self.wall_list.draw()
         self.player_list.draw()
@@ -116,7 +116,7 @@ class MyGame(arcade.Window):
 
         # scroll left
         left_boundary = self.view_left + LEFT_VIEWPORT_MARGIN
-        if self.player_sprite.left < left_boundary:
+        if self.player_sprite.left < left_boundary and self.view_left > 0:
             self.view_left -= left_boundary - self.player_sprite.left
             changed = True
 
