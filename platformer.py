@@ -10,8 +10,12 @@ CHARACTER_SCALING = 0.25
 TILE_SCALING = 0.5
 
 PLAYER_MOVEMENT_SPEED = 5
+UPDATES_PER_FRAME = 7
 GRAVITY = 3
 PLAYER_JUMP_SPEED = 40
+
+RIGHT_FACING = 0
+LEFT_FACING = 1
 
 # Scrolling
 LEFT_VIEWPORT_MARGIN = 250
@@ -19,6 +23,12 @@ RIGHT_VIEWPORT_MARGIN = 250
 BOTTOM_VIEWPORT_MARGIN = 50
 TOP_VIEWPORT_MARGIN = 100
 
+
+def load_texture_pair(filename):
+    return [
+        arcade.load_texture(filename),
+        arcade.load_texture(filename, mirrored=True)
+    ]
 
 class MyGame(arcade.Window):
     def __init__(self):
@@ -32,6 +42,15 @@ class MyGame(arcade.Window):
         self.background = None
         # player
         self.player_sprite = None
+        self.player_sprite_face_direction = RIGHT_FACING
+        self.current_texture = 0
+        self.jumping = False
+        self.main_path = "./assets/characters/main_character"
+        self.idle_texture_pair = load_texture_pair(f"{self.main_path}/idle (1).png")
+        self.walk_textures = []
+        for i in range(1, 16):
+            texture = load_texture_pair(f'{self.main_path}/Walk ({i}).png')
+            self.walk_textures.append(texture)
 
         self.physics_engine = None
 
@@ -63,7 +82,7 @@ class MyGame(arcade.Window):
             wall.center_x, wall.bottom = coordinate
             self.wall_list.append(wall)
 
-        image_source = "./assets/characters/main_character/idle (1).png"
+        image_source = f"./assets/characters/main_character/idle (1).png"
         self.player_sprite = arcade.Sprite(image_source, CHARACTER_SCALING)
         self.player_sprite.center_x = 128
         # self.player_sprite.bottom = self.floor
@@ -77,6 +96,13 @@ class MyGame(arcade.Window):
         # self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
+
+    def update_animation(self, delta_time: float =1/60):
+
+        if self.player_sprite.change_x < 0 and self.player_sprite_face_direction == RIGHT_FACING:
+            self.player_sprite_face_direction == LEFT_FACING
+
+
 
     def on_draw(self):
         """rendering happens here"""
@@ -110,6 +136,8 @@ class MyGame(arcade.Window):
     def on_update(self, delta_time):
 
         self.physics_engine.update()
+
+        self.update_animation()
 
         # track if we need to change the viewport
         changed = False
