@@ -10,7 +10,7 @@ CHARACTER_SCALING = 0.25
 TILE_SCALING = 0.5
 
 PLAYER_MOVEMENT_SPEED = 5
-UPDATES_PER_FRAME = 7
+UPDATES_PER_FRAME = 5
 GRAVITY = 3
 PLAYER_JUMP_SPEED = 40
 
@@ -30,6 +30,39 @@ def load_texture_pair(filename):
         arcade.load_texture(filename, mirrored=True)
     ]
 
+class Player(arcade.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.direction_facing = RIGHT_FACING
+        self.current_texture = 0
+        self.scale = CHARACTER_SCALING
+        main_path = "./assets/characters/main_character"
+        self.idle_texture_pair = load_texture_pair(f'{main_path}/idle (1).png')
+
+        self.walk_textures = []
+        for i in range(1, 15):
+            texture = load_texture_pair(f'{main_path}/Walk ({i}).png')
+            self.walk_textures.append(texture)
+
+    def update_animation(self, delta_time: float =1/60):
+        if self.change_x < 0 and self.direction_facing == RIGHT_FACING:
+            self.direction_facing == LEFT_FACING
+        elif self.change_x > 0 and self.direction_facing == LEFT_FACING:
+            self.direction_facing == RIGHT_FACING
+
+        if self.change_x == 0 and self.change_y == 0:
+            self.texture = self.idle_texture_pair[self.direction_facing]
+            return
+
+        self.current_texture += 1
+        if self.current_texture > 13 * UPDATES_PER_FRAME:
+            self.current_texture = 0
+
+        print(f"{self.current_texture} // {UPDATES_PER_FRAME}: {self.current_texture // UPDATES_PER_FRAME}")
+        self.texture = self.walk_textures[self.current_texture // UPDATES_PER_FRAME][self.direction_facing]
+
+
+
 class MyGame(arcade.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
@@ -38,21 +71,9 @@ class MyGame(arcade.Window):
         self.wall_list = None
         self.player_list = None
         self.floor = None
-
         self.background = None
-        # player
-        self.player_sprite = None
-        self.player_sprite_face_direction = RIGHT_FACING
-        self.current_texture = 0
-        self.jumping = False
-        self.main_path = "./assets/characters/main_character"
-        self.idle_texture_pair = load_texture_pair(f"{self.main_path}/idle (1).png")
-        self.walk_textures = []
-        for i in range(1, 16):
-            texture = load_texture_pair(f'{self.main_path}/Walk ({i}).png')
-            self.walk_textures.append(texture)
-
         self.physics_engine = None
+        self.player = None
 
         # used to keep track of our scrolling
         self.view_bottom = 0
@@ -61,6 +82,7 @@ class MyGame(arcade.Window):
     def setup(self):
         """setup happens here"""
         self.background = arcade.load_texture("./assets/tiles/png/BG.png")
+        print(self.background.width)
 
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
@@ -82,26 +104,20 @@ class MyGame(arcade.Window):
             wall.center_x, wall.bottom = coordinate
             self.wall_list.append(wall)
 
-        image_source = f"./assets/characters/main_character/idle (1).png"
-        self.player_sprite = arcade.Sprite(image_source, CHARACTER_SCALING)
-        self.player_sprite.center_x = 128
+        # image_source = f"./assets/characters/main_character/idle (1).png"
+        self.player = Player()
+        self.player.center_x = 128
         # self.player_sprite.bottom = self.floor
-        self.player_sprite.center_y = 32
+        self.player.center_y = 32
 
-        self.player_list.append(self.player_sprite)
+        self.player_list.append(self.player)
 
         # map_name = "./assets/maps/map.tmx"
         # platforms_layer_name = 'Platforms'
         # my_map = arcade.tilemap.read_tmx(map_name)
         # self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
 
-        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
-
-    def update_animation(self, delta_time: float =1/60):
-
-        if self.player_sprite.change_x < 0 and self.player_sprite_face_direction == RIGHT_FACING:
-            self.player_sprite_face_direction == LEFT_FACING
-
+        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player, self.wall_list, GRAVITY)
 
 
     def on_draw(self):
@@ -120,50 +136,50 @@ class MyGame(arcade.Window):
 
         if key == arcade.key.UP or key == arcade.key.W:
             if self.physics_engine.can_jump():
-                self.player_sprite.change_y = PLAYER_JUMP_SPEED
+                self.player.change_y = PLAYER_JUMP_SPEED
         elif key == arcade.key.LEFT or key == arcade.key.A:
-            self.player_sprite.change_x = -PLAYER_MOVEMENT_SPEED
+            self.player.change_x = -PLAYER_MOVEMENT_SPEED
         elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.player_sprite.change_x = PLAYER_MOVEMENT_SPEED
+            self.player.change_x = PLAYER_MOVEMENT_SPEED
 
     def on_key_release(self, key, modifiers):
 
         if key == arcade.key.LEFT or key == arcade.key.A:
-            self.player_sprite.change_x = 0
+            self.player.change_x = 0
         elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.player_sprite.change_x = 0
+            self.player.change_x = 0
 
     def on_update(self, delta_time):
 
+        self.player.update_animation()
         self.physics_engine.update()
 
-        self.update_animation()
 
         # track if we need to change the viewport
         changed = False
 
         # scroll left
         left_boundary = self.view_left + LEFT_VIEWPORT_MARGIN
-        if self.player_sprite.left < left_boundary and self.view_left > 0:
-            self.view_left -= left_boundary - self.player_sprite.left
+        if self.player.left < left_boundary and self.view_left > 0:
+            self.view_left -= left_boundary - self.player.left
             changed = True
 
         # scroll right
         right_boundary = self.view_left + SCREEN_WIDTH - RIGHT_VIEWPORT_MARGIN
-        if self.player_sprite.right > right_boundary:
-            self.view_left += self.player_sprite.right - right_boundary
+        if self.player.right > right_boundary:
+            self.view_left += self.player.right - right_boundary
             changed = True
 
         # scroll up
         top_boundary = self.view_bottom + SCREEN_HEIGHT - TOP_VIEWPORT_MARGIN
-        if self.player_sprite.top > top_boundary:
-            self.view_bottom += self.player_sprite.top - top_boundary
+        if self.player.top > top_boundary:
+            self.view_bottom += self.player.top - top_boundary
             changed = True
 
         # scroll down
         bottom_boundary = self.view_bottom + BOTTOM_VIEWPORT_MARGIN
-        if self.player_sprite.bottom < bottom_boundary:
-            self.view_bottom -= bottom_boundary - self.player_sprite.bottom
+        if self.player.bottom < bottom_boundary:
+            self.view_bottom -= bottom_boundary - self.player.bottom
             changed = True
 
         if changed:
@@ -172,6 +188,7 @@ class MyGame(arcade.Window):
 
             arcade.set_viewport(self.view_left, SCREEN_WIDTH + self.view_left,
                                 self.view_bottom, SCREEN_HEIGHT + self.view_bottom)
+
 
 
 def main():
