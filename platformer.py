@@ -10,7 +10,7 @@ CHARACTER_SCALING = 0.25
 TILE_SCALING = 0.5
 
 PLAYER_MOVEMENT_SPEED = 5
-UPDATES_PER_FRAME = 5
+UPDATES_PER_FRAME = 3
 GRAVITY = 3
 PLAYER_JUMP_SPEED = 40
 
@@ -46,9 +46,9 @@ class Player(arcade.Sprite):
 
     def update_animation(self, delta_time: float =1/60):
         if self.change_x < 0 and self.direction_facing == RIGHT_FACING:
-            self.direction_facing == LEFT_FACING
+            self.direction_facing = LEFT_FACING
         elif self.change_x > 0 and self.direction_facing == LEFT_FACING:
-            self.direction_facing == RIGHT_FACING
+            self.direction_facing = RIGHT_FACING
 
         if self.change_x == 0 and self.change_y == 0:
             self.texture = self.idle_texture_pair[self.direction_facing]
@@ -58,7 +58,7 @@ class Player(arcade.Sprite):
         if self.current_texture > 13 * UPDATES_PER_FRAME:
             self.current_texture = 0
 
-        print(f"{self.current_texture} // {UPDATES_PER_FRAME}: {self.current_texture // UPDATES_PER_FRAME}")
+        # print(f"{self.current_texture} // {UPDATES_PER_FRAME}: {self.current_texture // UPDATES_PER_FRAME}")
         self.texture = self.walk_textures[self.current_texture // UPDATES_PER_FRAME][self.direction_facing]
 
 
@@ -198,4 +198,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(e)
