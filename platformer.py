@@ -1,5 +1,5 @@
 import arcade
-
+from pyglet.gl.lib import GLException
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650
@@ -10,7 +10,7 @@ CHARACTER_SCALING = 0.25
 TILE_SCALING = 0.5
 
 PLAYER_MOVEMENT_SPEED = 5
-UPDATES_PER_FRAME = 3
+UPDATES_PER_FRAME = 10
 GRAVITY = 3
 PLAYER_JUMP_SPEED = 40
 
@@ -25,10 +25,13 @@ TOP_VIEWPORT_MARGIN = 100
 
 
 def load_texture_pair(filename):
-    return [
-        arcade.load_texture(filename),
-        arcade.load_texture(filename, mirrored=True)
+    x = [
+        arcade.load_texture(filename, can_cache=False),
+        arcade.load_texture(filename, mirrored=True, can_cache=False)
     ]
+    # print(f"{filename} Width: {x[0].width} Height: {x[0].height}, Mirrored: Width: {x[1].width} Height: {x[1].height}")
+
+    return x
 
 class Player(arcade.Sprite):
     def __init__(self):
@@ -44,7 +47,7 @@ class Player(arcade.Sprite):
             texture = load_texture_pair(f'{main_path}/Walk ({i}).png')
             self.walk_textures.append(texture)
 
-    def update_animation(self, delta_time: float =1/60):
+    def update_animation(self, delta_time: float=1/60):
         if self.change_x < 0 and self.direction_facing == RIGHT_FACING:
             self.direction_facing = LEFT_FACING
         elif self.change_x > 0 and self.direction_facing == LEFT_FACING:
@@ -58,8 +61,11 @@ class Player(arcade.Sprite):
         if self.current_texture > 13 * UPDATES_PER_FRAME:
             self.current_texture = 0
 
-        # print(f"{self.current_texture} // {UPDATES_PER_FRAME}: {self.current_texture // UPDATES_PER_FRAME}")
-        self.texture = self.walk_textures[self.current_texture // UPDATES_PER_FRAME][self.direction_facing]
+        # print(f"{self.current_texture} // {UPDATES_PER_FRAME}: {self.current_texture // UPDATES_PER_FRAME}  {self.direction_facing}")
+        try:
+            self.texture = self.walk_textures[self.current_texture // UPDATES_PER_FRAME][self.direction_facing]
+        except GLException:
+            pass
 
 
 
@@ -88,7 +94,7 @@ class MyGame(arcade.Window):
         self.wall_list = arcade.SpriteList()
 
         # sets the floor
-        for x in range(0, 1250, 64):
+        for x in range(0, 8000, 64):
             wall = arcade.Sprite("./assets/tiles/png/tile/2.png", TILE_SCALING)
             wall.center_x = x
             wall.center_y = 32
@@ -127,7 +133,7 @@ class MyGame(arcade.Window):
         # code to draw the screen goes here
 
         scale = SCREEN_WIDTH / self.background.width
-        arcade.draw_lrwh_rectangle_textured(-300, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
         self.wall_list.draw()
         self.player_list.draw()
@@ -153,7 +159,6 @@ class MyGame(arcade.Window):
 
         self.player.update_animation()
         self.physics_engine.update()
-
 
         # track if we need to change the viewport
         changed = False
@@ -190,7 +195,6 @@ class MyGame(arcade.Window):
                                 self.view_bottom, SCREEN_HEIGHT + self.view_bottom)
 
 
-
 def main():
     window = MyGame()
     window.setup()
@@ -198,7 +202,4 @@ def main():
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except Exception as e:
-        print(e)
+    main()
