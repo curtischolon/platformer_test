@@ -10,7 +10,7 @@ CHARACTER_SCALING = 0.25
 TILE_SCALING = 0.5
 
 PLAYER_MOVEMENT_SPEED = 5
-UPDATES_PER_FRAME = 10
+UPDATES_PER_FRAME = 4
 GRAVITY = 3
 PLAYER_JUMP_SPEED = 40
 
@@ -62,10 +62,7 @@ class Player(arcade.Sprite):
             self.current_texture = 0
 
         # print(f"{self.current_texture} // {UPDATES_PER_FRAME}: {self.current_texture // UPDATES_PER_FRAME}  {self.direction_facing}")
-        try:
-            self.texture = self.walk_textures[self.current_texture // UPDATES_PER_FRAME][self.direction_facing]
-        except GLException:
-            pass
+        self.texture = self.walk_textures[self.current_texture // UPDATES_PER_FRAME][0]
 
 
 
