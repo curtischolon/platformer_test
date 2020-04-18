@@ -27,11 +27,10 @@ TOP_VIEWPORT_MARGIN = 100
 def load_texture_pair(filename):
     x = [
         arcade.load_texture(filename, can_cache=False),
-        arcade.load_texture(filename, mirrored=True, can_cache=False)
+        arcade.load_texture(filename, mirrored=True)
     ]
-    # print(f"{filename} Width: {x[0].width} Height: {x[0].height}, Mirrored: Width: {x[1].width} Height: {x[1].height}")
-
     return x
+
 
 class Player(arcade.Sprite):
     def __init__(self):
@@ -61,9 +60,7 @@ class Player(arcade.Sprite):
         if self.current_texture > 13 * UPDATES_PER_FRAME:
             self.current_texture = 0
 
-        # print(f"{self.current_texture} // {UPDATES_PER_FRAME}: {self.current_texture // UPDATES_PER_FRAME}  {self.direction_facing}")
-        self.texture = self.walk_textures[self.current_texture // UPDATES_PER_FRAME][0]
-
+        self.texture = self.walk_textures[self.current_texture // UPDATES_PER_FRAME][self.direction_facing]
 
 
 class MyGame(arcade.Window):
@@ -85,7 +82,6 @@ class MyGame(arcade.Window):
     def setup(self):
         """setup happens here"""
         self.background = arcade.load_texture("./assets/tiles/png/BG.png")
-        print(self.background.width)
 
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
@@ -107,7 +103,6 @@ class MyGame(arcade.Window):
             wall.center_x, wall.bottom = coordinate
             self.wall_list.append(wall)
 
-        # image_source = f"./assets/characters/main_character/idle (1).png"
         self.player = Player()
         self.player.center_x = 128
         # self.player_sprite.bottom = self.floor
