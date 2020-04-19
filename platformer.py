@@ -39,10 +39,12 @@ class Player(arcade.Sprite):
         self.current_texture = 0
         self.scale = CHARACTER_SCALING
         main_path = "./assets/characters/main_character"
+        main_path = "./assets/characters/zombie"
         self.idle_texture_pair = load_texture_pair(f'{main_path}/idle (1).png')
 
         self.walk_textures = []
-        for i in range(1, 15):
+        # for i in range(1, 15):
+        for i in range(1, 10):
             texture = load_texture_pair(f'{main_path}/Walk ({i}).png')
             self.walk_textures.append(texture)
 
@@ -57,7 +59,7 @@ class Player(arcade.Sprite):
             return
 
         self.current_texture += 1
-        if self.current_texture > 13 * UPDATES_PER_FRAME:
+        if self.current_texture > 8 * UPDATES_PER_FRAME:
             self.current_texture = 0
 
         self.texture = self.walk_textures[self.current_texture // UPDATES_PER_FRAME][self.direction_facing]
@@ -81,10 +83,13 @@ class MyGame(arcade.Window):
 
     def setup(self):
         """setup happens here"""
-        self.background = arcade.load_texture("./assets/tiles/png/BG.png")
+
 
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
+
+        # sets background
+        self.background = arcade.load_texture("./assets/tiles/png/BG.png")
 
         # sets the floor
         for x in range(0, 8000, 64):
@@ -93,6 +98,8 @@ class MyGame(arcade.Window):
             wall.center_y = 32
             self.wall_list.append(wall)
         self.floor = wall.height
+
+
 
         coordinate_list = [[512, self.floor],
                            [256, self.floor],
@@ -125,7 +132,9 @@ class MyGame(arcade.Window):
         # code to draw the screen goes here
 
         scale = SCREEN_WIDTH / self.background.width
-        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+        # arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+        for x in range(0, 8000, 1000):
+            arcade.draw_lrwh_rectangle_textured(x, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
         self.wall_list.draw()
         self.player_list.draw()
