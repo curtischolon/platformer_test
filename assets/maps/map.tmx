@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.3.4" orientation="orthogonal" renderorder="right-down" width="400" height="30" tilewidth="128" tileheight="128" infinite="0" nextlayerid="8" nextobjectid="1">
+ <tileset firstgid="1" name="tiles" tilewidth="128" tileheight="128" tilecount="16" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image width="128" height="128" source="../tiles/png/Tile/1.png"/>
+  </tile>
+  <tile id="1">
+   <image width="128" height="128" source="../tiles/png/Tile/2.png"/>
+  </tile>
+  <tile id="2">
+   <image width="128" height="128" source="../tiles/png/Tile/3.png"/>
+  </tile>
+  <tile id="3">
+   <image width="128" height="128" source="../tiles/png/Tile/4.png"/>
+  </tile>
+  <tile id="4">
+   <image width="128" height="128" source="../tiles/png/Tile/5.png"/>
+  </tile>
+  <tile id="5">
+   <image width="128" height="128" source="../tiles/png/Tile/6.png"/>
+  </tile>
+  <tile id="6">
+   <image width="128" height="128" source="../tiles/png/Tile/7.png"/>
+  </tile>
+  <tile id="7">
+   <image width="128" height="128" source="../tiles/png/Tile/8.png"/>
+  </tile>
+  <tile id="8">
+   <image width="128" height="128" source="../tiles/png/Tile/9.png"/>
+  </tile>
+  <tile id="9">
+   <image width="128" height="128" source="../tiles/png/Tile/10.png"/>
+  </tile>
+  <tile id="10">
+   <image width="128" height="128" source="../tiles/png/Tile/11.png"/>
+  </tile>
+  <tile id="11">
+   <image width="128" height="128" source="../tiles/png/Tile/12.png"/>
+  </tile>
+  <tile id="12">
+   <image width="128" height="128" source="../tiles/png/Tile/13.png"/>
+  </tile>
+  <tile id="13">
+   <image width="128" height="93" source="../tiles/png/Tile/14.png"/>
+  </tile>
+  <tile id="14">
+   <image width="128" height="93" source="../tiles/png/Tile/15.png"/>
+  </tile>
+  <tile id="15">
+   <image width="128" height="93" source="../tiles/png/Tile/16.png"/>
+  </tile>
+ </tileset>
+ <layer id="1" name="Platforms" width="400" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt2ttuwyAMgOGu7//Q0+6izIBPEEP+T6q0deEQ6mCg+3wAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7Ox7eQEA6vg6X5F2rGXuPwMAnrFyTS+1pc1HUhkAwPksc7507T1/ANhf9CzD2g72ZP3sWudVxABwjt5ZRGYb5I93ks67AJzNel5xLSP9zho0btb34avM3t8C2E8vT+w4z1W0+3jN7v/u4wO0VFozzmpfc3/kj3da8b0a8YTTaON6dezPfOY0uYnnvaYZa4tV/5NBPAE2T+5neu2M8kbVZ33Ut9Vj63lF2mld47Vq31E5poAdzVpHWvYX9zKVWe9pZh8i5TPb0awRrGuIUV2jMhntAVir933G9Zr7+7s819J9tP42c71fSWSu9uay0f5v1C8A9WjW5aufX6lda19adUg/a8qO2tLUW0FkD2bZ20i52js25BXsSHMurTkHqLw+nd2f3vlYL3dJZe7vadrt1avpu7WtjPHUxp0ntlrzuuYeo/nFMzYVnxnU55mfvXWdIjq3eNrTXmNpX3vW0bvHyDrb0p9eG0/EnDYPWPuZlRcz+4T3+ZlYtxRz9znl1JjU5NAZbWquycodlrZ6+w9PvacZjdX1mqznpvV8Rj9zvMNf7qg2h69es3v6UGm8rmb0MVpPqz/MUbKZe9PMHH4vq63HGp8nf9a785xJeeJkZQxkzPnaM4ds3npbZ0hVSGdZmf3bLc9n095/5r7F0xcpBjR9Rj3XvYc2rnoxoLle+hvxodvvzMrzqC0SF6P6MvuYWRdxXIeUJ6KxGP1sme/+i6wXr9cxltDInhNwpl/uWAU3
+  </data>
+ </layer>
+</map>
