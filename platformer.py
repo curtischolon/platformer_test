@@ -101,14 +101,14 @@ class MyGame(arcade.Window):
 
 
 
-        coordinate_list = [[512, self.floor],
-                           [256, self.floor],
-                           [768, self.floor]]
+        # coordinate_list = [[512, self.floor],
+        #                    [256, self.floor],
+        #                    [768, self.floor]]
 
-        for coordinate in coordinate_list:
-            wall = arcade.Sprite("./assets/tiles/png/objects/crate.png", TILE_SCALING)
-            wall.center_x, wall.bottom = coordinate
-            self.wall_list.append(wall)
+        # for coordinate in coordinate_list:
+        #     wall = arcade.Sprite("./assets/tiles/png/objects/crate.png", TILE_SCALING)
+        #     wall.center_x, wall.bottom = coordinate
+        #     self.wall_list.append(wall)
 
         self.player = Player()
         self.player.center_x = 128
@@ -117,10 +117,10 @@ class MyGame(arcade.Window):
 
         self.player_list.append(self.player)
 
-        # map_name = "./assets/maps/map.tmx"
-        # platforms_layer_name = 'Platforms'
-        # my_map = arcade.tilemap.read_tmx(map_name)
-        # self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
+        map_name = "./assets/maps/map.tmx"
+        platforms_layer_name = 'Platforms'
+        my_map = arcade.tilemap.read_tmx(map_name)
+        self.wall_list = arcade.tilemap.process_layer(my_map, platforms_layer_name, TILE_SCALING)
 
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player, self.wall_list, GRAVITY)
 
@@ -134,7 +134,7 @@ class MyGame(arcade.Window):
         scale = SCREEN_WIDTH / self.background.width
         # arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
         for x in range(0, 8000, 1000):
-            arcade.draw_lrwh_rectangle_textured(x, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+            arcade.draw_lrwh_rectangle_textured(x, 0, self.background.width, self.background.height, self.background)
 
         self.wall_list.draw()
         self.player_list.draw()
